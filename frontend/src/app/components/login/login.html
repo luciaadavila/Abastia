@@ -12,6 +12,13 @@
           placeholder="Email"
           formControlName="email"
           class="form-control"/>
+
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+            El email es obligatorio
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+            Por favor, introduce un email válido
+          </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
