@@ -1,46 +1,63 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input
-      type="email"
-      id="email"
-      placeholder="Introduce tu correo electrónico"
-      formControlName="email"
-      class="form-control"
-    />
-  </div>
+<div class="register-container">
+  <div class="register-card">
+    <h1>Abastia</h1>
+    <p>Bienvenid@, regístrate para continuar</p>
 
-  <div class="form-group">
-    <label for="username">Username</label>
-    <input
-      type="text"
-      id="username"
-      placeholder="Introduce tu nombre de usuario"
-      formControlName="username"
-      class="form-control"
-    />
-  </div>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label for="email">Email</mat-label>
+        <input
+          matInput
+          type="email"
+          id="email"
+          placeholder="Email"
+          formControlName="email"
+          class="form-control"
+        />
+      </mat-form-field>
 
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input
-      type="password"
-      id="password"
-      placeholder="Introduce tu contraseña"
-      formControlName="password"
-      class="form-control"
-    />
-  </div>
+      <mat-form-field appearance="outline">
+        <mat-label for="username">Nombre de usuario</mat-label>
+        <input
+          matInput
+          type="text"
+          id="username"
+          placeholder="Nombre de usuario"
+          formControlName="username"
+          class="form-control"
+        />
+      </mat-form-field  >
 
-  <div class="form-group">
-    <label for="confirmPassword">Confirm Password</label>
-    <input
-      type="password"
-      id="confirmPassword"
-      placeholder="Confirma tu contraseña"
-      formControlName="confirmPassword"
-      class="form-control"
-    />
+      <mat-form-field appearance="outline">
+        <mat-label for="password">Contraseña</mat-label>
+        <input
+          matInput
+          type="password"
+          id="password"
+          placeholder="Contraseña"
+          formControlName="password"
+          class="form-control"
+        />
+      </mat-form-field  >
+
+      <mat-form-field appearance="outline">
+        <mat-label for="confirmPassword">Confirmar Contraseña</mat-label>
+        <input
+          matInput
+          type="password"
+          id="confirmPassword"
+          placeholder="Confirma tu contraseña"
+          formControlName="confirmPassword"
+          class="form-control"
+        />
+      </mat-form-field  >
+
+      <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="registerForm.invalid">
+        Registrarse
+      </button>
+      <p class="login-text">
+        ¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión</a>
+      </p>   
+    </form>
   </div>
-  
-  <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">Iniciar Sesión</button>
+</div>
