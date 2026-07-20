@@ -6,15 +6,17 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { isValidObjectId, Model } from 'mongoose';
+import { isValidObjectId, Model, Document } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './schemas/user.schema';
+
+export type UserDocument = User & Document;
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name)
-    private userModel: Model<User>,
+    private userModel: Model<UserDocument>,
   ) {}
 
   async create(dto: CreateUserDto): Promise<Omit<User, 'password'>> {
@@ -68,7 +70,7 @@ export class UsersService {
     return user;
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<UserDocument | null> {
     const user = await this.userModel
       .findOne({ email: email.trim().toLowerCase() })
       .exec();
