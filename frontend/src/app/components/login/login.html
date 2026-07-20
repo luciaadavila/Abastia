@@ -39,6 +39,12 @@
         >
           <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+          La contraseña es obligatoria
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('invalidCredentials')">
+          Correo o contraseña incorrectos
+        </mat-error>
 
       </mat-form-field>
       <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="loginForm.invalid">
@@ -48,6 +54,10 @@
         ¿Todavía no tienes una cuenta? <a routerLink="/register">Regístrate</a>
       </p>
     </form>
+
+    @if (errorMessage) {
+      <p>{{ errorMessage}}</p>
+    }
   </div>
 
 </div>

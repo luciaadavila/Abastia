@@ -21,6 +21,9 @@
         <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
           Por favor, introduce un email válido
         </mat-error>
+        <mat-error *ngIf="registerForm.get('email')?.hasError('emailTaken')">
+          Ya existe un usuario con este correo electrónico
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -87,5 +90,6 @@
         ¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión</a>
       </p>   
     </form>
+    
   </div>
 </div>
