@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { isValidObjectId, Model, Document } from 'mongoose';
+import { Document, isValidObjectId, Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './schemas/user.schema';
 
@@ -23,7 +23,7 @@ export class UsersService {
     try {
       const hashedPassword = await bcrypt.hash(dto.password, 10);
       const createdUser = await this.userModel.create({
-        name: dto.name,
+        username: dto.username,
         email: dto.email,
         password: hashedPassword,
       });
