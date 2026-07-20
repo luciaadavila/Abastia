@@ -25,7 +25,7 @@ export class AuthService {
       );
     }
     const newUser = await this.usersService.create({
-      name: dto.name,
+      username: dto.username,
       email: normalizedEmail,
       password: dto.password,
     });
@@ -36,7 +36,7 @@ export class AuthService {
   async validateUser(
     email: string,
     password: string,
-  ): Promise<{ userId: string; name: string; email: string } | null> {
+  ): Promise<{ userId: string; username: string; email: string } | null> {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
       return null;
@@ -47,7 +47,7 @@ export class AuthService {
     }
     return {
       userId: user._id.toString(),
-      name: user.name,
+      username: user.username,
       email: user.email,
     };
   }
