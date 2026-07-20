@@ -1,9 +1,19 @@
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 import { RegisterForm } from '../../interfaces/auth.interface';
 
 export const passwordMatchValidator = (control: AbstractControl): ValidationErrors | null => {
@@ -21,30 +31,58 @@ export const passwordMatchValidator = (control: AbstractControl): ValidationErro
   styleUrl: './register.scss',
 })
 export class Register {
-  registerForm = new FormGroup<RegisterForm>({
-    username: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(3)],
-    }),
-    email: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.email],
-    }),
-    password: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(6)],
-    }),
-    confirmPassword: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(6)],
-    }),
-  }, { validators: passwordMatchValidator
-    
-  });
+  errorMessage = '';
+  registerForm = new FormGroup<RegisterForm>(
+    {
+      username: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(3)],
+      }),
+      email: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.email],
+      }),
+      password: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(6)],
+      }),
+      confirmPassword: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(6)],
+      }),
+    },
+    { validators: passwordMatchValidator },
+  );
+
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly router: Router,
+  ) {}
 
   onSubmit(): void {
     if (this.registerForm.invalid) {
       return;
     }
+
+    const formValues = this.registerForm.getRawValue();
+    const { confirmPassword, ...registerData } = formValues;
+    this.errorMessage = '';
+
+    this.authService.register(registerData).subscribe({
+      next: () => {
+        this.router.navigate(['/home']);
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 409) {
+          this.registerForm.get('email')?.setErrors({ emailTaken: true });
+        } else {
+          const backendMessage = err.error?.message;
+          this.errorMessage = Array.isArray(backendMessage)
+            ? backendMessage.join(', ')
+            : (backendMessage ?? 'No se pudo registrar al usuario');
+        }
+      },
+    });
   }
 }
