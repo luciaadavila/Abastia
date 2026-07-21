@@ -1,0 +1,140 @@
+@use '../../../styles/variables' as *;
+
+:host {
+  display: block;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  inset: 0;
+
+  .app-toolbar {
+    background-color: $color-primario;
+    color: #ffffff;
+
+    button[matIconButton], 
+      .mat-mdc-button-base {
+        mat-icon {
+        color: $color-acento;
+      }
+
+      &:hover {
+        background-color: rgba($color-acento, 0.1);
+      }
+    }
+  }
+
+  &.is-mobile {
+    .app-toolbar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: $z-fijo; 
+    }
+
+    .sidenav-container {
+      flex: 1 0 auto;
+    }
+  }
+}
+
+
+
+.app-name {
+  margin-left: $espaciado-2;
+  font-size: $texto-lg;
+  font-weight: $grosor-semi-negrita;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.sidenav-container {
+  flex: 1;
+}
+
+mat-sidenav {
+  width: 260px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: $espaciado-6 $espaciado-4;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  > mat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    color: $color-primario;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.3rem; 
+  }
+
+  span {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: $texto-sm; 
+    opacity: 0.65;
+  }
+}
+
+mat-nav-list {
+  padding: $espaciado-4 0.75rem;
+
+  a[mat-list-item] {
+    margin-bottom: 0.35rem;
+    border-radius: $radio-borde-lg;
+
+    &:hover {
+      background-color: rgba($color-primario, 0.08);
+    }
+  }
+
+  .active-link {
+    background-color: rgba($color-primario, 0.15);
+
+    mat-icon {
+      color: $color-secundario;
+    }
+  }
+}
+
+/* Corregido para que coincida con class="sidenav-footer" del HTML */
+.sidenav-footer {
+  position: absolute;
+  right: $espaciado-4;
+  bottom: $espaciado-4;
+  left: $espaciado-4;
+}
+
+.logout-button {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  mat-icon {
+    margin-right: $espaciado-2;
+  }
+}
+
+.page-content {
+  min-height: 100%;
+  padding: $espaciado-8;
+  box-sizing: border-box;
+  background-color: #f5f6fa; 
+
+  @media (max-width: $breakpoint-movil) {
+    padding: $espaciado-4;
+  }
+}
