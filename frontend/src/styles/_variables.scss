@@ -1,0 +1,118 @@
+// --------------------------------------------------------------------------
+// 1. COLORES
+// --------------------------------------------------------------------------
+$color-verde: #277c4fff;
+$color-azul-oscuro: #20216fff;
+$color-amarillo: #ffc757ff;
+$color-crema: #f2eae3ff;
+$color-naranja-rojizo: #e03c1fff;
+
+$color-primario: $color-verde;
+$color-secundario: $color-azul-oscuro;
+$color-acento: $color-amarillo;
+$color-fondo: $color-crema;
+$color-peligro: $color-naranja-rojizo;
+$color-texto-principal: #333333;
+$color-texto-secundario: #666666;
+
+// --------------------------------------------------------------------------
+// 2. DEGRADADOS
+// --------------------------------------------------------------------------
+$degradado-arriba: linear-gradient(0deg, $color-verde, $color-azul-oscuro, $color-amarillo, $color-crema, $color-naranja-rojizo);
+$degradado-derecha: linear-gradient(90deg, $color-verde, $color-azul-oscuro, $color-amarillo, $color-crema, $color-naranja-rojizo);
+$degradado-abajo: linear-gradient(180deg, $color-verde, $color-azul-oscuro, $color-amarillo, $color-crema, $color-naranja-rojizo);
+$degradado-izquierda: linear-gradient(270deg, $color-verde, $color-azul-oscuro, $color-amarillo, $color-crema, $color-naranja-rojizo);
+$degradado-esquina-sup-der: linear-gradient(45deg, $color-verde, $color-azul-oscuro, $color-amarillo, $color-crema, $color-naranja-rojizo);
+$degradado-esquina-inf-der: linear-gradient(135deg, $color-verde, $color-azul-oscuro, $color-amarillo, $color-crema, $color-naranja-rojizo);
+$degradado-esquina-sup-izq: linear-gradient(225deg, $color-verde, $color-azul-oscuro, $color-amarillo, $color-crema, $color-naranja-rojizo);
+$degradado-esquina-inf-izq: linear-gradient(315deg, $color-verde, $color-azul-oscuro, $color-amarillo, $color-crema, $color-naranja-rojizo);
+$degradado-radial: radial-gradient($color-verde, $color-azul-oscuro, $color-amarillo, $color-crema, $color-naranja-rojizo);
+
+// --------------------------------------------------------------------------
+// 3. TIPOGRAFÍA
+// --------------------------------------------------------------------------
+$fuente-principal: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$fuente-titulos: 'Poppins', 'Montserrat', sans-serif;
+$fuente-codigo: 'Fira Code', 'Courier New', monospace;
+
+$texto-xs: 0.75rem;    // 12px
+$texto-sm: 0.875rem;   // 14px
+$texto-base: 1rem;     // 16px
+$texto-md: 1.125rem;   // 18px
+$texto-lg: 1.25rem;    // 20px
+$texto-xl: 1.5rem;     // 24px
+$texto-2xl: 2rem;      // 32px
+$texto-3xl: 2.5rem;    // 40px
+$texto-4xl: 3rem;      // 48px
+
+$grosor-ligero: 300;
+$grosor-normal: 400;
+$grosor-medio: 500;
+$grosor-semi-negrita: 600;
+$grosor-negrita: 700;
+$grosor-extra-negrita: 900;
+
+$altura-linea-nula: 1;
+$altura-linea-estrecha: 1.25;
+$altura-linea-normal: 1.5;
+$altura-linea-amplia: 2;
+
+// --------------------------------------------------------------------------
+// 4. ESPACIADO (Márgenes y Paddings)
+// --------------------------------------------------------------------------
+$espaciado-0: 0;
+$espaciado-1: 0.25rem;  // 4px
+$espaciado-2: 0.5rem;   // 8px
+$espaciado-3: 0.75rem;  // 12px
+$espaciado-4: 1rem;     // 16px
+$espaciado-5: 1.25rem;  // 20px
+$espaciado-6: 1.5rem;   // 24px
+$espaciado-8: 2rem;     // 32px
+$espaciado-10: 2.5rem;  // 40px
+$espaciado-12: 3rem;    // 48px
+$espaciado-16: 4rem;    // 64px
+$espaciado-20: 5rem;    // 80px
+
+// --------------------------------------------------------------------------
+// 5. PUNTOS DE RUPTURA (Breakpoints para Responsive)
+// --------------------------------------------------------------------------
+$breakpoint-movil: 576px;
+$breakpoint-tablet: 768px;
+$breakpoint-portatil: 992px;
+$breakpoint-escritorio: 1200px;
+$breakpoint-pantalla-grande: 1400px;
+
+// --------------------------------------------------------------------------
+// 6. BORDES Y RADIOS
+// --------------------------------------------------------------------------
+$grosor-borde-sm: 1px;
+$grosor-borde-md: 2px;
+$grosor-borde-lg: 4px;
+
+$radio-borde-sm: 0.25rem;  // 4px
+$radio-borde-md: 0.375rem; // 6px
+$radio-borde-lg: 0.5rem;   // 8px
+$radio-borde-xl: 1rem;     // 16px
+$radio-borde-redondo: 9999px; // Para círculos o botones en forma de píldora
+
+// --------------------------------------------------------------------------
+// 7. Z-INDEX (Profundidad)
+// --------------------------------------------------------------------------
+$z-oculto: -1;
+$z-base: 0;
+$z-menu-desplegable: 1000;
+$z-pegajoso: 1020;
+$z-fijo: 1030;
+$z-fondo-modal: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;
+
+// --------------------------------------------------------------------------
+// 8. SOMBRAS
+// --------------------------------------------------------------------------
+$sombra-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$sombra-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+$sombra-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+$sombra-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+$sombra-ninguna: none;
