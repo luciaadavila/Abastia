@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
 import { Home } from './components/home/home';
-import { ListaCompra } from './components/lista-compra/lista-compra';
 import { Login } from './components/login/login';
-import { Productos } from './components/productos/productos';
+import { Products } from './components/products/products';
 import { Profile } from './components/profile/profile';
 import { Register } from './components/register/register';
+import { ShoppingList } from './components/shopping-list/shopping-list';
 import { Sidenav } from './components/sidenav/sidenav';
 import { authGuard } from './core/guards/auth-guard';
 
@@ -31,13 +31,13 @@ export const routes: Routes = [
       },
 
       {
-        path: 'productos',
-        component: Productos,
+        path: 'products',
+        component: Products,
         canActivate: [authGuard],
       },
       {
-        path: 'listaCompra',
-        component: ListaCompra,
+        path: 'shoppingList',
+        component: ShoppingList,
         canActivate: [authGuard],
       },
       {
