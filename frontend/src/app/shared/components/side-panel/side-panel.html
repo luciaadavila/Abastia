@@ -1,0 +1,34 @@
+<mat-drawer-container
+    class="drawer-container"
+    [class.panel-open]="opened"
+    [hasBackdrop]="false"
+>
+    <mat-drawer-content class="main-content">
+        <ng-content select="[main-content]"></ng-content>
+    </mat-drawer-content>
+
+    <mat-drawer
+        class="right-panel"
+        position="end"
+        mode="side"
+        [opened]="opened"
+        (openedChange)="onOpenedChange($event)"
+    >
+        <header class="panel-header">
+            <h2 class="panel-title">{{ title }}</h2>
+            <button
+                class="panel-close"
+                mat-icon-button
+                type="button"
+                aria-label="cerrar-panel"
+                (click)="close()"
+            >
+                <mat-icon>close</mat-icon>
+            </button>
+        </header>
+
+        <div class="panel-body">
+            <ng-content select="[panel-content]"></ng-content>
+        </div>
+    </mat-drawer>
+</mat-drawer-container>

@@ -1,0 +1,162 @@
+@use '../../../styles/variables' as *;
+
+.product-detail {
+  display: flex;
+  flex-direction: column;
+  gap: $espaciado-6;
+
+  min-height: 100%;
+  padding: $espaciado-6;
+
+  box-sizing: border-box;
+}
+
+.product-image {
+  display: grid;
+  place-items: center;
+
+  width: 100%;
+  min-height: 220px;
+
+  overflow: hidden;
+
+  background: $color-fondo;
+  border-radius: $radio-borde-xl;
+
+  img {
+    display: block;
+
+    width: 100%;
+    height: 220px;
+
+    object-fit: cover;
+  }
+
+  mat-icon {
+    width: 72px;
+    height: 72px;
+
+    color: $color-texto-principal;
+    font-size: 72px;
+
+    opacity: 0.35;
+  }
+}
+
+.product-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $espaciado-4;
+
+  min-width: 0;
+
+  > div {
+    min-width: 0;
+  }
+
+  h2 {
+    margin: 0;
+
+    overflow-wrap: anywhere;
+    color: $color-primario !important;
+
+    font-size: $texto-xl;
+    font-weight: $grosor-semi-negrita;
+  }
+
+  p {
+    margin: $espaciado-1 0 0;
+    color: $color-texto-secundario;
+  }
+}
+
+.product-data {
+  display: flex;
+  flex-direction: column;
+  gap: $espaciado-4;
+
+  margin: 0;
+
+  div {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $espaciado-6;
+
+    padding-bottom: $espaciado-2;
+
+    border-bottom: $grosor-borde-sm solid rgba($color-texto-secundario, 0.12);
+  }
+
+  dt {
+    color: $color-texto-secundario;
+  }
+
+  dd {
+    margin: 0;
+
+    font-weight: $grosor-medio;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+}
+
+.storage-card {
+  display: flex;
+  align-items: center;
+  gap: $espaciado-4;
+
+  padding: $espaciado-4;
+  
+  border: $grosor-borde-sm solid rgba($color-texto-secundario, 0.2);
+  border-radius: $radio-borde-lg;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    color: $color-peligro;
+    min-width: 0;
+  }
+
+  span {
+    color: $color-texto-secundario;
+    font-size: $texto-sm;
+  }
+}
+
+.detail-actions {
+  display: flex;
+  gap: $espaciado-3;
+
+  margin-top: auto;
+  padding-top: $espaciado-2;
+
+  button {
+    flex: 1;
+  }
+}
+
+@media (max-width: $breakpoint-movil) {
+  .product-detail {
+    padding: $espaciado-4;
+  }
+
+  .product-heading {
+    gap: $espaciado-2;
+  }
+
+  .product-data {
+    div {
+      gap: $espaciado-3;
+    }
+  }
+
+  .detail-actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}

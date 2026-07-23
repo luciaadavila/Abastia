@@ -1,1 +1,113 @@
-<p>productos works!</p>
+<app-side-panel
+    [(opened)]="panelOpen"
+    [title]="panelTitle"
+>
+    <main main-content class="products-page">
+        <header class="page-header">
+            <div>
+                <h1>Mis productos</h1>
+                <p>Consulta, añade y organiza tus productos</p>
+            </div>
+            <button
+                mat-flat-button
+                type="button"
+                (click)="openCreateForm()"
+            >
+                <mat-icon>add</mat-icon>
+                Añadir producto
+            </button>
+        </header>
+
+        <p>{{ products.length }}</p>
+        <p>{{ categoryGroups.length }}</p>
+        <p>{{ loading }}</p>
+
+        <p
+            *ngIf="errorMessage"
+            class="error-message"
+        >
+            {{ errorMessage }}
+        </p>
+
+        <div 
+            *ngIf="loading"
+            class="loading-container"
+        >
+            <mat-spinner diameter="42"></mat-spinner>
+        </div>
+
+        <div
+            *ngIf="!loading && products.length === 0"
+            class="empty-state"
+        >
+            <mat-icon>inventory-2</mat-icon>
+            <h2>No tienes productos</h2>
+            <p>Añade tu primer producto para comenzar</p>
+            <button
+                mat-flat-button
+                type="button"
+                (click)="openCreateForm()"
+            >
+                Añadir producto
+            </button>
+        </div>
+        <section
+            *ngFor="let group of categoryGroups"
+            class="category-section"
+        >
+            <h2>{{ group.categoria }}</h2>
+            <div class="products-grid">
+                <mat-card
+                    *ngFor="let product of group.productos"
+                    class="product-card"
+                    tabindex="0"
+                    role="button"
+                    (click) = "openProductDetail(product)"
+                    (keydown.enter)="openProductDetail(product)"
+                >
+                    <div class="card-image">
+                        <img
+                            *ngIf="product.imagen; else productIcon"
+                            [src]="product.imagen"
+                            [alt]="product.nombre"
+                        />
+                        <ng-template #productIcon>
+                            <mat-icon>inventory_2</mat-icon>
+                        </ng-template>
+                    </div>
+
+                    <mat-card-content>
+                        <h3>{{ product.nombre }} </h3>
+                        <p *ngIf="product.marca">
+                            {{ product.marca }}
+                        </p>
+                        <span>
+                            {{ product.lugarPorDefecto | titlecase }}
+                        </span>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </section>
+    </main>
+
+    <div panel-content>
+        <app-product-detail
+            *ngIf="panelView === 'detail' && selectedProduct"
+            [product]="selectedProduct"
+            [deleting]="deleting"
+            (editRequested)="openEditForm()"
+            (deleteRequested)="deleteSelectedProduct()"
+        >
+        </app-product-detail>
+        <app-product-form
+            *ngIf="panelView === 'form'"
+            [mode]="formMode"
+            [product]="formMode === 'edit' ? selectedProduct : null"
+            [saving]="saving"
+            (save)="saveProduct($event)"
+            (cancel)="cancelForm()"
+        >
+        </app-product-form>
+    </div>
+
+</app-side-panel>
