@@ -1,0 +1,120 @@
+@if (product(); as product) {
+  <article class="product-detail">
+    <div class="product-image">
+      @if (product.imagen) {
+        <img
+          [src]="product.imagen"
+          [alt]="product.nombre"
+        />
+      } @else {
+        <mat-icon>
+          inventory_2
+        </mat-icon>
+      }
+    </div>
+
+    <div class="product-heading">
+      <div>
+        <h2>
+          {{ product.nombre }}
+        </h2>
+        @if (product.marca) {
+          <p>
+            {{ product.marca }}
+          </p>
+        }
+      </div>
+
+      <mat-chip>
+        {{ product.categoria }}
+      </mat-chip>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <dl class="product-data">
+      <div>
+        <dt>
+          Unidad de medida
+        </dt>
+        <dd>
+          {{ product.unidadMedida }}
+        </dd>
+      </div>
+
+      <div>
+        <dt>
+          Lugar por defecto
+        </dt>
+
+        <dd>
+          {{ product.lugarPorDefecto | titlecase }}
+        </dd>
+      </div>
+
+      <div>
+        <dt>
+          En la despensa
+        </dt>
+
+        <dd>
+          {{ product.enDespensa ? 'Sí' : 'No' }}
+        </dd>
+      </div>
+
+    </dl>
+
+    <section>
+      <h3>
+        Lugares de almacenamiento
+      </h3>
+
+      @for (
+        location of product.lugaresAlmacenamiento;
+        track location.lugar
+      ) {
+
+        <div class="storage-card">
+          <mat-icon>
+            kitchen
+          </mat-icon>
+          <div>
+            <strong>
+              {{ location.lugar | titlecase }}
+            </strong>
+            <span>
+              {{ location.diasCaducidadEstimados }}
+              días estimados
+            </span>
+          </div>
+        </div>
+      }
+    </section>
+
+    <div class="detail-actions">
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="editRequested.emit()"
+      >
+        <mat-icon>
+          edit
+        </mat-icon>
+        Editar
+      </button>
+
+      <button
+        mat-stroked-button
+        type="button"
+        [disabled]="deleting()"
+        (click)="deleteRequested.emit()"
+      >
+
+        <mat-icon>
+          delete
+        </mat-icon>
+        Eliminar
+      </button>
+    </div>
+  </article>
+}

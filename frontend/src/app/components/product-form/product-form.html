@@ -1,0 +1,274 @@
+<form
+  class="product-form"
+  [formGroup]="productForm"
+  (ngSubmit)="submit()"
+>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Nombre</mat-label>
+
+    <input
+      matInput
+      formControlName="nombre"
+      placeholder="Ej. Leche"
+    />
+
+    @if (
+      productForm.controls.nombre.hasError('required')
+    ) {
+      <mat-error>
+        El nombre es obligatorio.
+      </mat-error>
+    }
+
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline">
+    <mat-label>Marca</mat-label>
+
+    <input
+      matInput
+      formControlName="marca"
+      placeholder="Ej. Central Lechera"
+    />
+
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline">
+    <mat-label>Categoría</mat-label>
+
+    <input
+      matInput
+      formControlName="categoria"
+      placeholder="Ej. Lácteos"
+    />
+
+    @if (
+      productForm.controls.categoria.hasError('required')
+    ) {
+      <mat-error>
+        La categoría es obligatoria.
+      </mat-error>
+    }
+
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline">
+    <mat-label>URL de la imagen</mat-label>
+
+    <input
+      matInput
+      formControlName="imagen"
+      placeholder="https://..."
+    />
+
+    @if (
+      productForm.controls.imagen.hasError('pattern')
+    ) {
+      <mat-error>
+        Introduce una URL válida.
+      </mat-error>
+    }
+
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline">
+    <mat-label>Unidad de medida</mat-label>
+
+    <mat-select formControlName="unidadMedida">
+
+      @for (
+        unidad of unidadesMedida;
+        track unidad
+      ) {
+        <mat-option [value]="unidad">
+          {{ unidad }}
+        </mat-option>
+      }
+
+    </mat-select>
+  </mat-form-field>
+
+
+  <section class="storage-section">
+
+    <div class="section-title">
+      <div>
+        <h3>
+          Lugares de almacenamiento
+        </h3>
+
+        <p>
+          Indica dónde se puede guardar el producto
+        </p>
+      </div>
+
+
+      <button
+        mat-icon-button
+        type="button"
+        aria-label="Añadir lugar"
+        (click)="addStorageLocation()"
+      >
+        <mat-icon>
+          add
+        </mat-icon>
+      </button>
+
+    </div>
+
+
+    <div formArrayName="lugaresAlmacenamiento">
+
+      @for (
+        location of lugaresAlmacenamiento.controls;
+        track $index;
+        let index = $index
+      ) {
+
+        <div
+          class="storage-location"
+          [formGroupName]="index"
+        >
+
+          <mat-form-field appearance="outline">
+
+            <mat-label>
+              Lugar
+            </mat-label>
+
+            <mat-select formControlName="lugar">
+
+              @for (
+                lugar of lugaresDisponibles;
+                track lugar
+              ) {
+
+                <mat-option [value]="lugar">
+                  {{ lugar | titlecase }}
+                </mat-option>
+
+              }
+
+            </mat-select>
+
+          </mat-form-field>
+
+
+          <mat-form-field appearance="outline">
+
+            <mat-label>
+              Días estimados
+            </mat-label>
+
+            <input
+              matInput
+              type="number"
+              min="0"
+              formControlName="diasCaducidadEstimados"
+            />
+
+          </mat-form-field>
+
+
+          <button
+            mat-icon-button
+            type="button"
+            [disabled]="lugaresAlmacenamiento.length === 1"
+            (click)="removeStorageLocation(index)"
+          >
+
+            <mat-icon>
+              delete_outline
+            </mat-icon>
+
+          </button>
+
+        </div>
+
+      }
+
+    </div>
+
+  </section>
+
+
+  <mat-form-field appearance="outline">
+
+    <mat-label>
+      Lugar por defecto
+    </mat-label>
+
+    <mat-select formControlName="lugarPorDefecto">
+
+      @for (
+        lugar of lugaresDisponibles;
+        track lugar
+      ) {
+
+        <mat-option [value]="lugar">
+          {{ lugar | titlecase }}
+        </mat-option>
+
+      }
+
+    </mat-select>
+
+  </mat-form-field>
+
+
+  <mat-checkbox formControlName="enDespensa">
+    Actualmente está en mi despensa
+  </mat-checkbox>
+
+
+  <div class="form-actions">
+
+    <button
+      mat-button
+      type="button"
+      [disabled]="saving()"
+      (click)="cancel.emit()"
+    >
+      Cancelar
+    </button>
+
+
+    <button
+      mat-flat-button
+      type="submit"
+      [disabled]="productForm.invalid || saving()"
+    >
+
+      @if (saving()) {
+
+        <mat-spinner diameter="20"/>
+
+      } @else {
+
+        <mat-icon>
+          {{ mode() === 'create'
+              ? 'add'
+              : 'save' }}
+        </mat-icon>
+
+      }
+
+
+      <span>
+        {{
+          mode() === 'create'
+            ? 'Añadir producto'
+            : 'Guardar cambios'
+        }}
+      </span>
+
+    </button>
+
+  </div>
+
+</form>

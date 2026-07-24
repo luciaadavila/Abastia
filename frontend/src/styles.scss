@@ -37,6 +37,7 @@ body {
   margin: 0;
   height: 100%;
 }
+
 /* You can add global styles to this file, and also import other style files */
 
 .mat-mdc-form-field-icon-suffix {
@@ -45,4 +46,9 @@ body {
     border: none !important;
     background: transparent;
   }
+}
+
+.mat-mdc-unelevated-button:not(:disabled) {
+    background-color: #ffc757ff !important;
+    color: #20216fff !important;
 }

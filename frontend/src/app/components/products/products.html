@@ -1,1 +1,142 @@
-<p>productos works!</p>
+<app-side-panel
+    [(opened)]="panelOpen"
+    [title]="panelTitle"
+>
+    <main main-content class="products-page">
+        <header class="page-header">
+            <div>
+                <h1>Mis productos</h1>
+                <p>Consulta, añade y organiza tus productos</p>
+            </div>
+
+            <button
+                mat-flat-button
+                type="button"
+                (click)="openCreateForm()"
+            >
+                <mat-icon>add</mat-icon>
+                Añadir producto
+            </button>
+        </header>
+
+        <p
+            *ngIf="errorMessage"
+            class="error-message"
+        >
+            {{ errorMessage }}
+        </p>
+
+
+        @if (loading()) {
+            <div class="loading-container">
+                <mat-spinner diameter="42"></mat-spinner>
+            </div>
+        }
+
+
+        @if (!loading() && products().length === 0) {
+            <div class="empty-state">
+                <mat-icon>inventory-2</mat-icon>
+
+                <h2>No tienes productos</h2>
+
+                <p>
+                    Añade tu primer producto para comenzar
+                </p>
+
+                <button
+                    mat-flat-button
+                    type="button"
+                    (click)="openCreateForm()"
+                >
+                    Añadir producto
+                </button>
+            </div>
+        }
+
+
+        @for (group of categoryGroups(); track group.categoria) {
+            <section class="category-section">
+                <h2>{{ group.categoria }}</h2>
+
+                <div class="products-grid">
+                    @for (product of group.productos; track product._id) {
+
+                        <mat-card
+                            class="product-card"
+                            tabindex="0"
+                            role="button"
+                            (click)="openProductDetail(product)"
+                            (keydown.enter)="openProductDetail(product)"
+                        >
+
+                            <div class="card-image">
+                                @if (product.imagen) {
+                                    <img
+                                        [src]="product.imagen"
+                                        [alt]="product.nombre"
+                                    />
+                                } @else {
+                                    <mat-icon>
+                                        inventory_2
+                                    </mat-icon>
+                                }
+                            </div>
+
+
+                            <mat-card-content>
+                                <h3>
+                                    {{ product.nombre }}
+                                </h3>
+
+                                @if (product.marca) {
+                                    <p>
+                                        {{ product.marca }}
+                                    </p>
+                                }
+
+                                <span>
+                                    {{ product.lugarPorDefecto | titlecase }}
+                                </span>
+                            </mat-card-content>
+
+                        </mat-card>
+
+                    }
+                </div>
+            </section>
+        }
+
+    </main>
+
+
+    <div panel-content>
+
+        @if (
+            panelView === 'detail'
+            && selectedProduct()
+        ) {
+            <app-product-detail
+                [product]="selectedProduct()!"
+                [deleting]="deleting()"
+                (editRequested)="openEditForm()"
+                (deleteRequested)="deleteSelectedProduct()"
+            />
+        }
+
+
+        @if (panelView === 'form') {
+            <app-product-form
+                [mode]="formMode"
+                [product]="formMode === 'edit'
+                    ? selectedProduct()
+                    : null"
+                [saving]="saving()"
+                (save)="saveProduct($event)"
+                (cancel)="cancelForm()"
+            />
+        }
+
+    </div>
+
+</app-side-panel>

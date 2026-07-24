@@ -5,8 +5,8 @@ import { Products } from './components/products/products';
 import { Profile } from './components/profile/profile';
 import { Register } from './components/register/register';
 import { ShoppingList } from './components/shopping-list/shopping-list';
-import { Sidenav } from './components/sidenav/sidenav';
 import { authGuard } from './core/guards/auth-guard';
+import { Sidenav } from './shared/components/sidenav/sidenav';
 
 export const routes: Routes = [
   {
