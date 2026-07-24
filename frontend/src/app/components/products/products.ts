@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
 import { finalize } from 'rxjs';
+
 import { ProductsService } from '../../core/services/products.service';
 import { Product } from '../../interfaces/product.interface';
 import { SidePanel } from '../../shared/components/side-panel/side-panel';
@@ -37,26 +37,48 @@ type FormMode = 'create' | 'edit';
 })
 export class Products implements OnInit {
   private readonly productsService = inject(ProductsService);
-  private readonly cdr = inject(ChangeDetectorRef);
 
-  products: Product[] = [];
-  categoryGroups: ProductCategoryGroup[] = [];
-  selectedProduct: Product | null = null;
+  products = signal<Product[]>([]);
+
+  categoryGroups = computed<ProductCategoryGroup[]>(() => {
+    const categoryMap = new Map<string, Product[]>();
+
+    for (const product of this.products()) {
+      const category = product.categoria?.trim() || 'Sin categoría';
+
+      const productsInCategory = categoryMap.get(category) ?? [];
+      productsInCategory.push(product);
+
+      categoryMap.set(category, productsInCategory);
+    }
+
+    return Array.from(categoryMap.entries())
+      .sort(([categoryA], [categoryB]) => categoryA.localeCompare(categoryB))
+      .map(([categoria, productos]) => ({
+        categoria,
+        productos: productos.sort((productA, productB) =>
+          productA.nombre.localeCompare(productB.nombre),
+        ),
+      }));
+  });
+
+  selectedProduct = signal<Product | null>(null);
 
   panelOpen = false;
   panelView: PanelView = 'detail';
   formMode: FormMode = 'create';
 
-  loading = false;
-  saving = false;
-  deleting = false;
+  loading = signal(false);
+  saving = signal(false);
+  deleting = signal(false);
 
   errorMessage = '';
 
   get panelTitle(): string {
     if (this.panelView === 'detail') {
-      return this.selectedProduct?.nombre ?? 'Detalle del producto';
+      return this.selectedProduct()?.nombre ?? 'Detalle del producto';
     }
+
     return this.formMode === 'create' ? 'Añadir producto' : 'Editar producto';
   }
 
@@ -65,21 +87,22 @@ export class Products implements OnInit {
   }
 
   openCreateForm(): void {
-    this.selectedProduct = null;
+    this.selectedProduct.set(null);
     this.formMode = 'create';
     this.panelView = 'form';
     this.panelOpen = true;
   }
 
   openProductDetail(product: Product): void {
-    this.selectedProduct = product;
+    this.selectedProduct.set(product);
+
     this.formMode = 'create';
     this.panelView = 'detail';
     this.panelOpen = true;
 
     this.productsService.getProductById(product._id!).subscribe({
-      next: (completeProduct: Product) => {
-        this.selectedProduct = completeProduct;
+      next: (completeProduct) => {
+        this.selectedProduct.set(completeProduct);
       },
       error: () => {
         this.errorMessage = 'No se pudo obtener el detalle del producto';
@@ -88,7 +111,7 @@ export class Products implements OnInit {
   }
 
   openEditForm(): void {
-    if (!this.selectedProduct) {
+    if (!this.selectedProduct()) {
       return;
     }
 
@@ -97,10 +120,11 @@ export class Products implements OnInit {
   }
 
   cancelForm(): void {
-    if (this.formMode === 'edit' && this.selectedProduct) {
+    if (this.formMode === 'edit' && this.selectedProduct()) {
       this.panelView = 'detail';
       return;
     }
+
     this.panelOpen = false;
   }
 
@@ -114,30 +138,36 @@ export class Products implements OnInit {
   }
 
   deleteSelectedProduct(): void {
-    if (!this.selectedProduct) {
+    const product = this.selectedProduct();
+
+    if (!product) {
       return;
     }
 
-    const confirmed = window.confirm(`¿Quieres eliminar "${this.selectedProduct.nombre}"?`);
+    const confirmed = window.confirm(`¿Quieres eliminar "${product.nombre}"?`);
+
     if (!confirmed) {
       return;
     }
 
-    const productId = this.selectedProduct._id;
-    this.deleting = true;
+    const productId = product._id;
+
+    this.deleting.set(true);
+
     this.productsService
       .deleteProduct(productId!)
       .pipe(
         finalize(() => {
-          this.deleting = false;
+          this.deleting.set(false);
         }),
       )
       .subscribe({
         next: () => {
-          this.products = this.products.filter((product) => productId != product._id);
-          this.groupProductsByCategory();
+          this.products.update((products) =>
+            products.filter((product) => product._id !== productId),
+          );
 
-          this.selectedProduct = null;
+          this.selectedProduct.set(null);
           this.panelOpen = false;
         },
         error: () => {
@@ -147,27 +177,18 @@ export class Products implements OnInit {
   }
 
   private loadProducts(): void {
-    this.loading = true;
+    this.loading.set(true);
 
     this.productsService
       .getProducts()
       .pipe(
         finalize(() => {
-          this.loading = false;
-          this.cdr.detectChanges();
-          setTimeout(() => {
-            console.log('Timeout', {
-              loading: this.loading,
-              products: this.products.length,
-              groups: this.categoryGroups.length,
-            });
-          }, 1000);
+          this.loading.set(false);
         }),
       )
       .subscribe({
-        next: (products: Product[]) => {
-          this.products = products;
-          this.groupProductsByCategory();
+        next: (products) => {
+          this.products.set(products);
         },
         error: () => {
           this.errorMessage = 'No se pudieron cargar los productos';
@@ -176,20 +197,20 @@ export class Products implements OnInit {
   }
 
   private createProduct(productData: Product): void {
-    this.saving = true;
+    this.saving.set(true);
 
     this.productsService
       .createProduct(productData)
       .pipe(
         finalize(() => {
-          this.saving = false;
+          this.saving.set(false);
         }),
       )
       .subscribe({
-        next: (createdProduct: Product) => {
-          this.products = [...this.products, createdProduct];
-          this.groupProductsByCategory();
-          this.selectedProduct = createdProduct;
+        next: (createdProduct) => {
+          this.products.update((products) => [...products, createdProduct]);
+
+          this.selectedProduct.set(createdProduct);
           this.panelView = 'detail';
         },
         error: () => {
@@ -199,56 +220,36 @@ export class Products implements OnInit {
   }
 
   private updateProduct(productData: Product): void {
-    if (!this.selectedProduct) {
+    const currentProduct = this.selectedProduct();
+
+    if (!currentProduct) {
       return;
     }
 
-    const productId = this.selectedProduct._id;
-
-    this.saving = true;
+    this.saving.set(true);
     this.errorMessage = '';
 
     this.productsService
-      .updateProduct(productId!, productData)
+      .updateProduct(currentProduct._id!, productData)
       .pipe(
         finalize(() => {
-          this.saving = false;
+          this.saving.set(false);
         }),
       )
       .subscribe({
-        next: (updatedProduct: Product) => {
-          this.products = this.products.map((product) =>
-            product._id === updatedProduct._id ? updatedProduct : product,
+        next: (updatedProduct) => {
+          this.products.update((products) =>
+            products.map((product) =>
+              product._id === updatedProduct._id ? updatedProduct : product,
+            ),
           );
 
-          this.groupProductsByCategory();
-
-          this.selectedProduct = updatedProduct;
+          this.selectedProduct.set(updatedProduct);
           this.panelView = 'detail';
         },
         error: () => {
           this.errorMessage = 'No se pudieron guardar los cambios';
         },
       });
-  }
-
-  private groupProductsByCategory(): void {
-    const categoryMap = new Map<string, Product[]>();
-
-    for (const product of this.products) {
-      const category = product.categoria?.trim() || 'Sin categoría';
-      const categoryProducts = categoryMap.get(category) ?? [];
-      categoryProducts.push(product);
-      categoryMap.set(category, categoryProducts);
-    }
-
-    this.categoryGroups = Array.from(categoryMap.entries())
-      .sort(([categoryA], [categoryB]) => categoryA.localeCompare(categoryB))
-      .map(([categoria, productos]) => ({
-        categoria,
-        productos: productos.sort((productA, productB) =>
-          productA.nombre.localeCompare(productB.nombre),
-        ),
-      }));
   }
 }

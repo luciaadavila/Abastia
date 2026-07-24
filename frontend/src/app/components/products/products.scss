@@ -62,11 +62,14 @@
 }
 
 .card-image {
-  display: grid;
+  display: flex;
   place-items: center;
+   aspect-ratio: 16 / 10;
+  height: auto;
 
   width: 100%;
   height: 140px;
+  overflow: hidden;
 
   background: $color-fondo;
 
